@@ -277,13 +277,97 @@ try {
 
 ## Level 7: Take a look at the handle Submit and construct Direct Message methods
 
-## Level 8: Take a look at the fetch Messages methods
+## Level 8: Fetch the messages
+Locate the line 
+```js
+console.log('Fetching sent messages...');
+```
+
+Below the line,  add
+```js
+    try {
+      const response = await web5.dwn.records.query({
+        from: myDid,
+        message: {
+          filter: {
+            protocol: "https://blackgirlbytes.dev/burn-book-finale",
+            schema: "https://example.com/directMessageSchema",
+          },
+        },
+      });
+
+      if (response.status.code === 200) {
+        const userMessages = await Promise.all(
+          response.records.map(async (record) => {
+            const data = await record.data.json();
+            return {
+              ...data, 
+              recordId: record.id 
+            };
+          })
+        );
+        return userMessages
+      } else {
+        console.error('Error fetching sent messages:', response.status);
+        return [];
+      }
+
+    } catch (error) {
+      console.error('Error in fetchSentMessages:', error);
+    }
+```
+
+Locate this line:
+```js
+  console.log('Fetching received direct messages...');
+```
+
+Add the lines below:
+
+```js
+    try {
+      const response = await web5.dwn.records.query({
+        message: {
+          filter: {
+            protocol: "https://blackgirlbytes.dev/burn-book-finale",
+          },
+        },
+      });
+
+      if (response.status.code === 200) {
+        const directMessages = await Promise.all(
+          response.records.map(async (record) => {
+            const data = await record.data.json();
+            return {
+              ...data, 
+              recordId: record.id 
+            };
+          })
+        );
+        return directMessages
+      } else {
+        console.error('Error fetching sent messages:', response.status);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error in fetchReceivedDirectMessages:', error);
+    }
+```
+
+Locate the line 
+```js
+ console.log('this is in fetchMessages')
+```
+
+And replace it with this line
+```js
+    const userMessages = await fetchUserMessages();
+    const directMessages = await fetchDirectMessages();
+    const allMessages = [...(userMessages || []), ...(directMessages || [])];
+    setMessages(allMessages);
+```
 
 ## Level 9: Take a look at the delete message method
 
 ## Level 10: Let's try it out!
-
-
-
-```
 
