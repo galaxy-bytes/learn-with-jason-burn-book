@@ -124,74 +124,14 @@ export default function Home() {
 
   const fetchUserMessages = async () => {
     console.log('Fetching sent messages...');
-    try {
-      const response = await web5.dwn.records.query({
-        from: myDid,
-        message: {
-          filter: {
-            protocol: "https://blackgirlbytes.dev/burn-book-finale",
-            schema: "https://example.com/directMessageSchema",
-          },
-        },
-      });
-
-      if (response.status.code === 200) {
-        const userMessages = await Promise.all(
-          response.records.map(async (record) => {
-            const data = await record.data.json();
-            return {
-              ...data, 
-              recordId: record.id 
-            };
-          })
-        );
-        return userMessages
-      } else {
-        console.error('Error fetching sent messages:', response.status);
-        return [];
-      }
-
-    } catch (error) {
-      console.error('Error in fetchSentMessages:', error);
-    }
   };
 
   const fetchDirectMessages = async () => {
     console.log('Fetching received direct messages...');
-    try {
-      const response = await web5.dwn.records.query({
-        message: {
-          filter: {
-            protocol: "https://blackgirlbytes.dev/burn-book-finale",
-          },
-        },
-      });
-
-      if (response.status.code === 200) {
-        const directMessages = await Promise.all(
-          response.records.map(async (record) => {
-            const data = await record.data.json();
-            return {
-              ...data, 
-              recordId: record.id 
-            };
-          })
-        );
-        return directMessages
-      } else {
-        console.error('Error fetching sent messages:', response.status);
-        return [];
-      }
-    } catch (error) {
-      console.error('Error in fetchReceivedDirectMessages:', error);
-    }
   };
 
   const fetchMessages = async () => {
-    const userMessages = await fetchUserMessages();
-    const directMessages = await fetchDirectMessages();
-    const allMessages = [...(userMessages || []), ...(directMessages || [])];
-    setMessages(allMessages);
+     console.log('this is in fetchMessages')
   };
 
 
